@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>把 AI 变成你的第二大脑</title>
+<meta name="description" content="个人经验整理：WorkBuddy 上手 + 个人知识库搭建 + Skill 定制。">
+<style>
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 32px; }
+body {
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, Georgia, serif;
+  background: #f5f4ed;
+  color: #141413;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root {
+  --parchment: #f5f4ed;
+  --surface: #faf9f5;
+  --brand: #1B365D;
+  --brand-soft: #d8dde7;
+  --near-black: #141413;
+  --olive: #504e49;
+  --stone: #6b6a64;
+  --border: #e8e6dc;
+  --warm-cream: #f0eee5;
+}
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 56px 40px 96px;
+}
+
+/* Sidebar */
+.sidebar {
+  position: sticky;
+  top: 32px;
+  align-self: start;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 16px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.brand-title {
+  font-family: "Noto Serif SC", Georgia, serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--brand);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.brand-sub {
+  font-size: 12.5px;
+  color: var(--stone);
+  letter-spacing: 0.02em;
+}
+
+.toc-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone);
+  padding: 12px 16px 8px;
+}
+
+.toc {
+  list-style: none;
+  font-size: 13.5px;
+}
+.toc ul { list-style: none; padding-left: 0; }
+.toc ul ul { padding-left: 14px; }
+.toc li { margin: 2px 0; }
+
+.toc a {
+  display: block;
+  padding: 6px 12px 6px 16px;
+  color: var(--olive);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  line-height: 1.5;
+}
+.toc a:hover {
+  color: var(--brand);
+}
+.toc a.is-active {
+  color: var(--brand);
+  border-left-color: var(--brand);
+  font-weight: 500;
+}
+
+.toc .l2 {
+  font-size: 13px;
+}
+.toc .l3 {
+  font-size: 12.5px;
+  color: var(--stone);
+}
+
+/* Main */
+.main { min-width: 0; }
+
+.cover {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 40px 44px;
+  margin-bottom: 36px;
+}
+.cover h1.doc-title {
+  font-family: "Noto Serif SC", Georgia, serif;
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--brand);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+.cover .doc-sub {
+  font-size: 15px;
+  color: var(--stone);
+  margin-bottom: 16px;
+}
+.cover .doc-meta {
+  font-size: 13px;
+  color: var(--stone);
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-top: 12px;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.content h1 {
+  font-family: "Noto Serif SC", Georgia, serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--brand);
+  margin: 56px 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--brand);
+  letter-spacing: 0.01em;
+}
+.content h1:first-of-type { margin-top: 0; }
+.content h2 {
+  font-family: "Noto Serif SC", Georgia, serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--near-black);
+  margin: 36px 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--brand);
+}
+.content h3 {
+  font-family: "Noto Sans SC", "PingFang SC", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--olive);
+  margin: 24px 0 10px;
+}
+
+.content p { margin-bottom: 14px; }
+.content ul, .content ol { margin: 8px 0 14px 22px; }
+.content li { margin: 6px 0; }
+
+strong { color: var(--brand); font-weight: 600; }
+em { font-style: italic; color: var(--olive); }
+
+code {
+  font-family: "JetBrains Mono", "Consolas", "Source Code Pro", monospace;
+  font-size: 13.5px;
+  background: rgba(27, 54, 93, 0.07);
+  color: var(--brand);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.content pre {
+  background: #1a1d24;
+  color: #e6e3d8;
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 14px 0 20px;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", "Consolas", "Source Code Pro", monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  border: 1px solid #2a2e36;
+}
+.content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+  border-radius: 0;
+}
+
+hr {
+  border: 0;
+  border-top: 1px dashed var(--border);
+  margin: 36px 0;
+}
+
+/* Callout */
+.callout {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 14px;
+  background: #f0eee5;
+  border-left: 3px solid var(--brand);
+  padding: 14px 18px;
+  border-radius: 4px;
+  margin: 16px 0 20px;
+  font-size: 14.5px;
+  color: var(--near-black);
+}
+.callout .emoji { font-size: 18px; line-height: 1.55; }
+.callout-body p { margin: 0; }
+.callout-body p + p { margin-top: 8px; }
+
+/* Table */
+.table-wrap { overflow-x: auto; margin: 12px 0 20px; }
+.content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.content th, .content td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.content th { background: var(--warm-cream); font-weight: 600; color: var(--olive); }
+.content tr:last-child td { border-bottom: 0; }
+
+/* Pager */
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.pager a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.pager .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 4px;
+}
+.pager .next { text-align: right; }
+.pager a:hover strong { color: var(--brand); }
+
+/* Mobile */
+@media (max-width: 880px) {
+  .layout {
+    grid-template-columns: 1fr;
+    padding: 24px 18px 80px;
+    gap: 20px;
+  }
+  .sidebar {
+    position: static;
+    max-height: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 0 12px;
+  }
+  .toc { display: flex; overflow-x: auto; gap: 4px; padding: 0 8px; scrollbar-width: none; }
+  .toc::-webkit-scrollbar { display: none; }
+  .toc ul { display: none; }  /* mobile: only top-level */
+  .toc > li, .toc {
+    display: inline-flex;
+    flex-wrap: nowrap;
+  }
+  .toc a {
+    white-space: nowrap;
+    border-left: 0;
+    border-bottom: 2px solid transparent;
+    padding: 6px 12px;
+  }
+  .toc a.is-active { border-bottom-color: var(--brand); }
+  .cover { padding: 24px 20px; }
+  .cover h1.doc-title { font-size: 22px; }
+  .pager { grid-template-columns: 1fr; gap: 12px; }
+  .pager .next { text-align: left; }
+}
+
+/* Back to top button */
+#topBtn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, transform .25s;
+  box-shadow: 0 4px 12px rgba(27,54,93,0.25);
+  z-index: 30;
+}
+#topBtn.show { opacity: 1; pointer-events: auto; }
+#topBtn:hover { transform: translateY(-2px); }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" aria-label="目录">
+    <div class="brand">
+      <div class="brand-title">静雯 · AI 学习笔记</div>
+      <div class="brand-sub">WorkBuddy · 第二大脑 · Skill</div>
+    </div>
+    <div class="toc-label">本页内容</div>
+    <ul class="toc" id="toc">
+<li><a href="#part-1-认识-workbuddy-入门篇" data-target="part-1-认识-workbuddy-入门篇"><span class="l1">Part 1 · 认识 WorkBuddy（入门篇）</span></a>
+<ul><li><a href="#1-1-它是什么" data-target="1-1-它是什么"><span class="l2">1.1 它是什么</span></a></li></ul>
+<ul><li><a href="#1-2-上手第一步-免费额度与充值问题" data-target="1-2-上手第一步-免费额度与充值问题"><span class="l2">1.2 上手第一步：免费额度与充值问题</span></a></li></ul>
+<ul><li><a href="#1-3-第一次对话-让-ai-帮你-长出-自定义指令" data-target="1-3-第一次对话-让-ai-帮你-长出-自定义指令"><span class="l2">1.3 第一次对话：让 AI 帮你"长出"自定义指令</span></a></li></ul>
+<ul><li><a href="#1-4-推荐-计划模式-先让-ai-出方案再动手" data-target="1-4-推荐-计划模式-先让-ai-出方案再动手"><span class="l2">1.4 推荐"计划模式"：先让 AI 出方案再动手</span></a></li></ul>
+<ul><li><a href="#1-5-别忘了选-工作空间" data-target="1-5-别忘了选-工作空间"><span class="l2">1.5 别忘了选"工作空间"</span></a></li></ul>
+<ul><li><a href="#1-6-省-token-技巧-新任务开新对话框" data-target="1-6-省-token-技巧-新任务开新对话框"><span class="l2">1.6 省 token 技巧：新任务开新对话框</span></a></li></ul>
+<ul><li><a href="#1-7-它还能调用的-外挂-专家-技能" data-target="1-7-它还能调用的-外挂-专家-技能"><span class="l2">1.7 它还能调用的"外挂"：专家 + 技能</span></a></li></ul>
+<ul><li><a href="#1-8-还有这些隐藏能力-值得一试" data-target="1-8-还有这些隐藏能力-值得一试"><span class="l2">1.8 还有这些隐藏能力（值得一试）</span></a></li></ul>
+<li><a href="#part-2-进阶一-搭建你的个人知识库-第二大脑" data-target="part-2-进阶一-搭建你的个人知识库-第二大脑"><span class="l1">Part 2 · 进阶一：搭建你的个人知识库（第二大脑）</span></a>
+<ul><li><a href="#2-1-为什么要建个人知识库" data-target="2-1-为什么要建个人知识库"><span class="l2">2.1 为什么要建个人知识库</span></a></li></ul>
+<ul><li><a href="#2-2-先懂三个词-rag-向量检索-llm-wiki" data-target="2-2-先懂三个词-rag-向量检索-llm-wiki"><span class="l2">2.2 先懂三个词：RAG、向量检索、LLM Wiki</span></a></li></ul>
+<ul><li><a href="#2-3-为什么推荐用-obsidian-作为知识库载体" data-target="2-3-为什么推荐用-obsidian-作为知识库载体"><span class="l2">2.3 为什么推荐用 Obsidian 作为知识库载体</span></a></li></ul>
+<ul><li><a href="#2-4-五步搭起你的第二大脑" data-target="2-4-五步搭起你的第二大脑"><span class="l2">2.4 五步搭起你的第二大脑</span></a></li></ul>
+<ul><ul><li><a href="#第一步-装好-obsidian-建一个空库" data-target="第一步-装好-obsidian-建一个空库"><span class="l3">第一步｜装好 Obsidian，建一个空库</span></a></li></ul></ul>
+<ul><ul><li><a href="#第二步-看懂三层目录结构" data-target="第二步-看懂三层目录结构"><span class="l3">第二步｜看懂三层目录结构</span></a></li></ul></ul>
+<ul><ul><li><a href="#第三步-让-ai-采访你" data-target="第三步-让-ai-采访你"><span class="l3">第三步｜让 AI 采访你</span></a></li></ul></ul>
+<ul><ul><li><a href="#第四步-让它出目录方案-你审过再动手" data-target="第四步-让它出目录方案-你审过再动手"><span class="l3">第四步｜让它出目录方案，你审过再动手</span></a></li></ul></ul>
+<ul><ul><li><a href="#第五步-验收通道" data-target="第五步-验收通道"><span class="l3">第五步｜验收通道</span></a></li></ul></ul>
+<ul><li><a href="#2-5-可直接复制的-口令-模板" data-target="2-5-可直接复制的-口令-模板"><span class="l2">2.5 可直接复制的「口令」模板</span></a></li></ul>
+<li><a href="#part-3-进阶二-打造你自己的-skill" data-target="part-3-进阶二-打造你自己的-skill"><span class="l1">Part 3 · 进阶二：打造你自己的 Skill</span></a>
+<ul><li><a href="#3-1-skill-是什么" data-target="3-1-skill-是什么"><span class="l2">3.1 Skill 是什么</span></a></li></ul>
+<ul><li><a href="#3-2-一个-skill-长什么样" data-target="3-2-一个-skill-长什么样"><span class="l2">3.2 一个 Skill 长什么样</span></a></li></ul>
+<ul><li><a href="#3-3-从需求到落地-十句口令走完全程" data-target="3-3-从需求到落地-十句口令走完全程"><span class="l2">3.3 从需求到落地：十句口令走完全程</span></a></li></ul>
+<ul><ul><li><a href="#阶段一-先站在别人的肩膀上" data-target="阶段一-先站在别人的肩膀上"><span class="l3">阶段一｜先站在别人的肩膀上</span></a></li></ul></ul>
+<ul><ul><li><a href="#阶段二-魔改成自己的版本" data-target="阶段二-魔改成自己的版本"><span class="l3">阶段二｜魔改成自己的版本</span></a></li></ul></ul>
+<ul><ul><li><a href="#阶段三-把偏好固化成-skill" data-target="阶段三-把偏好固化成-skill"><span class="l3">阶段三｜把偏好固化成 Skill</span></a></li></ul></ul>
+<ul><li><a href="#3-4-安全红线" data-target="3-4-安全红线"><span class="l2">3.4 安全红线</span></a></li></ul>
+<li><a href="#part-4-写在最后" data-target="part-4-写在最后"><span class="l1">Part 4 · 写在最后</span></a>
+<ul><li><a href="#4-1-使用小贴士" data-target="4-1-使用小贴士"><span class="l2">4.1 使用小贴士</span></a></li></ul>
+<ul><li><a href="#4-2-官方资源" data-target="4-2-官方资源"><span class="l2">4.2 官方资源</span></a></li></ul>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <div class="cover">
+      <h1 class="doc-title">把 AI 变成你的第二大脑</h1>
+      <div class="doc-sub">WorkBuddy 上手 · 个人知识库搭建 · Skill 定制</div>
+      <div class="doc-meta">作者：吴静雯 · 2025 级大数据管理与应用 · 个人经验整理（请勿外传）</div>
+    </div>
+
+    <article class="content">
+<h1 id="前言">前言</h1>
+<p>大家好，我是吴静雯。前段时间我在实习过程中跟 AI 打交道时攒下来一些小经验，就其中两点希望与大家进行分享与交流：一是**WorkBuddy 这个 AI 工作台怎么使用**；二是**怎么从零搭起自己的"第二大脑"和"专属技能"**。</p>
+<div class="callout"><span class="emoji">💡</span><div class="callout-body">**本文是个人经验整理，不是官方教程**。所有内容都参考的是实习公司的公开知识分享和个人使用感受。如果你想要更完整的学习路径，可以参考网上视频或是其他学习资料～</div></div>
+<p>读完这篇你大概能收获三件事：</p>
+<ul>
+<li>15 分钟搞清楚 WorkBuddy 该怎么用、怎么用得省事</li>
+<li>一套可以直接抄作业的个人知识库搭建流程</li>
+<li>一个把"老让我重复说的话"固化成 Skill 的方法</li>
+</ul>
+<p>如果实在懒得操作，优先推荐掌握**Part 1**❗️</p>
+<hr/>
+<h1 id="part-1-认识-workbuddy-入门篇">Part 1 · 认识 WorkBuddy（入门篇）</h1>
+<h2 id="1-1-它是什么">1.1 它是什么</h2>
+<p>如果把 ChatGPT 比作"会聊天的网页"，那 WorkBuddy 更像一个**装在你电脑里的 AI 工作台**：既能对话、又能直接读写你电脑里的文件、能调用各种工具（搜网页、跑代码、做图、做网页、连飞书/腾讯会议…）。一句话概括：**它不是一个对话窗口，而是一个"AI 助理 + 文件夹 + 工具箱"的合体，**是国内免费的、还算比较好用的AI Agent。</p>
+<h2 id="1-2-上手第一步-免费额度与充值问题">1.2 上手第一步：免费额度与充值问题</h2>
+<p>WorkBuddy 每个月会送一些免费额度（不同档位赠送量不一样，以你注册时看到的为准）。这里有一个**小坑**要提前提醒：</p>
+<div class="callout"><span class="emoji">💡</span><div class="callout-body">**充值前后的账号内容是不共通的。**也就是说，如果你先用免费号做了不少对话、积累了一些工作痕迹，再去充值"升级账号"，之前的对话记录和个人设置等个性化内容是**不会自动迁移**过去的，会变成两个独立的账号。</div></div>
+<p>所以如果你打算长期用、有明确的产出需求，**建议一开始就充值**，避免后期迁移的麻烦。充值的入口在左下角 → 积分余额相关。</p>
+<h2 id="1-3-第一次对话-让-ai-帮你-长出-自定义指令">1.3 第一次对话：让 AI 帮你"长出"自定义指令</h2>
+<p>很多人不知道的是，WorkBuddy（以及大多数 AI 工具）都支持**"自定义指令 / 系统提示词"**。你可以把它理解成"AI 每次跟你对话前都要读一遍的便条"，告诉它你是谁、你偏好什么风格、哪些事不能做。</p>
+<p>不用自己想，**可以让 AI 反过来帮你写，通过问答的形式进行**。比如第一次对话时：</p>
+<pre class="lang-text"><code>你扮演"我的 AI 助理"。先问我 8 个左右的问题，
+包括我的身份、专业、常用工作内容、喜欢的回答风格、
+不希望出现的表达、对数据/格式的偏好等。
+最后根据我的回答，输出一份可以直接粘到自定义指令里的中文版本。</code></pre>
+<p>答完之后你只需要：</p>
+<ol>
+<li>把生成出来的文本复制到 WorkBuddy **设置**里的"**自定义指令**"位置</li>
+<li>用两三个任务验证一下是否符合预期，不满意再调</li>
+<li>以后每次大改前习惯性更新一下指令</li>
+</ol>
+<h2 id="1-4-推荐-计划模式-先让-ai-出方案再动手">1.4 推荐"计划模式"：先让 AI 出方案再动手</h2>
+<p>WorkBuddy 有"直接动手"和"先出方案再动手"两种工作模式。我自己**几乎所有稍微复杂点的任务都会选计划模式**。原因很简单：</p>
+<ul>
+<li>AI 会先把你这个任务拆解成步骤，先给你看思路</li>
+<li>你可以**中途纠正方向**，不至于做完才发现跑偏</li>
+<li>生成的步骤文件可以作为留痕，方便后续追溯</li>
+</ul>
+<p>实操建议：</p>
+<ol>
+<li>打开新对话前先想清楚"我想要的结果是什么"</li>
+<li>让 AI 先出大纲或步骤</li>
+<li>你审完再让它执行</li>
+<li>执行过程中如果哪一步偏了，及时打断而不是事后返工</li>
+</ol>
+<h2 id="1-5-别忘了选-工作空间">1.5 别忘了选"工作空间"</h2>
+<p>WorkBuddy 有一个很多人忽视但**非常关键**的设置：**工作空间（workspace）**。简单说就是"这次任务的文件夹"。</p>
+<p>它的作用是：</p>
+<ul>
+<li>AI 生成的代码、文档、图表等文件会**留存在你电脑里本地对应的文件夹**</li>
+<li>后续子对话可以引用之前的产出</li>
+<li>任务之间互不干扰</li>
+</ul>
+<div class="callout"><span class="emoji">📁</span><div class="callout-body">**经验法则：**每个独立项目开一个独立的工作空间，比如"毕业论文"、"学创杯比赛"、"公众号排版"。这样不同项目的成果分得清清楚楚，不会混在一起。</div></div>
+<h2 id="1-6-省-token-技巧-新任务开新对话框">1.6 省 token 技巧：新任务开新对话框</h2>
+<p>AI 跟你对话的"上下文窗口"是有限的（虽然模型越来越长，但也不是无底洞）。如果你在**同一个对话框**里一会儿写文案、一会儿写代码、一会儿又聊课程作业，每次新话题都会带着前面所有对话一起跑——既费额度又容易让 AI 抓不住重点。</p>
+<p>**经验法则：**开始一个**全新的、独立的任务**时，**关掉旧对话框，开一个新的**。这样上下文干净，AI 反应也快。</p>
+<h2 id="1-7-它还能调用的-外挂-专家-技能">1.7 它还能调用的"外挂"：专家 + 技能</h2>
+<p>WorkBuddy 里有两个词你经常会看到：**专家**和**技能（Skill）**。</p>
+<ul>
+<li>**专家**：可以理解成"专门训练过的 AI 角色"，比如"职场导师"、"数据分析师"、"小红书博主"等。你在左侧栏点"专家"进去就能看到很多分类</li>
+<li>**技能**：可以理解成"让 AI 按某种固定流程办事的小插件"，比如"把长文档整理成摘要"、"自动生成北欧风PPT "等</li>
+</ul>
+<p>它们的价值是：**把通用 AI 调教成更适合你的样子**。后面 Part 3 有如何自己造一个 Skill的相关分享。</p>
+<h2 id="1-8-还有这些隐藏能力-值得一试">1.8 还有这些隐藏能力（值得一试）</h2>
+<p>除了上面说的，还有一些能力值得尝试，但我有些也还未尝试😅：</p>
+<ul>
+<li>**图片生成**：直接描述需求，AI 帮你出图（封面图、插画、表情包）</li>
+<li>**数据可视化**：丢给它一份数据，让它自动生成图表</li>
+<li>**网页/小程序/PDF 产出**：让 AI 直接生成可发布的成品（不是只给代码）</li>
+<li>**接入飞书/腾讯会议/邮箱**：在对话框里就能完成日程、文档、邮件相关操作</li>
+</ul>
+<p>这些能力大多数**第一次用需要授权一次**，可以直接问AI，让它教你走一遍流程。</p>
+<hr/>
+<h1 id="part-2-进阶一-搭建你的个人知识库-第二大脑">Part 2 · 进阶一：搭建你的个人知识库（第二大脑）</h1>
+<h2 id="2-1-为什么要建个人知识库">2.1 为什么要建个人知识库</h2>
+<p>大一、大二我们用得最多的信息载体是**微信收藏、网盘、Notion、本地文件夹**等等。但这些工具都有同一个问题：**信息进去了就不容易出来**。</p>
+<p>你想要的是哪种体验？</p>
+<ul>
+<li>打开 AI 助手问一句"我之前看过一篇关于 XX 的文章，能帮我找出来吗？"，几秒钟就调出来</li>
+<li>写课程作业时，AI 能引用我**自己的笔记和资料**，而不是瞎编</li>
+<li>我之前写的公众号、做的 PPT、跑过的代码，能跨工具调用</li>
+</ul>
+<p>这就是**个人知识库**的价值：让你的**私人资料**成为 AI 随时能调用的"第二大脑"，而不是死存在某个 App 的角落里。</p>
+<h2 id="2-2-先懂三个词-rag-向量检索-llm-wiki">2.2 先懂三个词：RAG、向量检索、LLM Wiki</h2>
+<p>简单看一眼即可：</p>
+<div class="table-wrap"><table>
+<thead><tr>
+<th>概念</th>
+<th>通俗解释</th>
+</tr></thead><tbody>
+<tr>
+<td>**RAG**（检索增强生成）</td>
+<td>AI 在回答你之前，先去你的私人资料库里**"翻一遍"**相关的内容，把找到的当参考再生成回答。这样回答的依据是你自己的资料，而不是凭空想象。</td>
+</tr>
+<tr>
+<td>**向量检索**</td>
+<td>把文字变成"语义坐标"，意思相近的句子坐标接近。这样不用逐字匹配关键词，就能找到"意思相关"的内容。</td>
+</tr>
+<tr>
+<td>**LLM Wiki**</td>
+<td>用大模型帮你**自动整理、串联、解释**你自己 Wiki 里的笔记。不只是检索，还能"读懂"你的资料。</td>
+</tr>
+</tbody></table></div>
+<p>一句话总结这套体系的工作方式：**"你的笔记"+"AI 检索理解能力"="你的私人助理"**。</p>
+<h2 id="2-3-为什么推荐用-obsidian-作为知识库载体">2.3 为什么推荐用 Obsidian 作为知识库载体</h2>
+<p>市面上能搭知识库的工具不少（Notion、得到大脑、飞书文档、甚至本地文件夹都行），但我的实习公司最推荐 Obsidian，主要原因：</p>
+<ul>
+<li>**本地优先**：所有笔记都是本地 Markdown 文件，**你永远拥有自己的数据**，不会被平台绑架</li>
+<li>**格式开放**：纯 Markdown，十年后还能打开看，不绑定任何厂商</li>
+<li>**双链功能**：笔记之间可以互相引用，像大脑神经元一样连成网</li>
+<li>**插件生态丰富**：双向链接、思维导图、日历、白板… 想加什么装什么</li>
+<li>**配合 AI 友好**：纯文本意味着 AI 可以直接读、能 RAG、能检索</li>
+</ul>
+<h2 id="2-4-五步搭起你的第二大脑">2.4 五步搭起你的第二大脑</h2>
+<p>概念听懂了不算会用，这一节把搭建过程拆成五步，每步都有明确动作和能直接粘贴的话术。你要做的只有两件事：回答问题、做确认。体力活全部交给 AI。</p>
+<h3 id="第一步-装好-obsidian-建一个空库">第一步｜装好 Obsidian，建一个空库</h3>
+<ul>
+<li>到 obsidian.md 官网下载安装包（全平台免费），首次打开选「创建新库（Vault）」，文件夹放在你记得住路径的地方，想防丢可以建在云盘同步目录里</li>
+</ul>
+<h3 id="第二步-看懂三层目录结构">第二步｜看懂三层目录结构</h3>
+<p>知识库的骨架是一套固定的三层结构。要理解的核心是：文件夹不是给人看的导航，而是给 AI 看的地图——它一进来就知道去哪找素材、能改哪里、哪里绝对不能碰。</p>
+<pre class="lang-text"><code>MyVault/
+├── AGENTS.md          ← AI 的入口说明书，整个库的规则
+├── Raw/               ← 原始素材层：只读，AI 永远不改
+│   ├── articles/      ← 剪藏的文章
+│   ├── books/         ← 读书笔记
+│   └── recordings/    ← 录音转写稿
+├── Wiki/              ← 知识层：AI 全权维护
+│   ├── index.md       ← 全部页面的目录
+│   ├── log.md         ← 操作日志，只追加不删除
+│   ├── concepts/      ← 概念页，一个概念一页
+│   └── sources/       ← 每篇素材的摘要页
+└── Outputs/           ← 产出层：你和 AI 一起写的成品
+    ├── drafts/        ← 草稿
+    └── daily/         ← 每日笔记</code></pre>
+<p>三层的分工逻辑：<code>Raw</code> 只进不改，保证原始素材永远可信；<code>Wiki</code> 由 AI 负责提炼、互链和持续更新；<code>Outputs</code> 放你基于知识库做出的东西。</p>
+<p>顶层框架固定，子文件夹则要按你自己的专业和项目去定制——这正是下一步要做的事。</p>
+<h3 id="第三步-让-ai-采访你">第三步｜让 AI 采访你</h3>
+<p>库现在是空的，但不用慌：你脑子里已经存了大量经验、偏好和判断，只是从来没被「导出」过。采访就是门槛最低的导出方式——你只管回答，让AI 负责追问，它甚至能挖出你自己都没意识到的习惯。</p>
+<p>先把 WorkBuddy 的工作空间指向你的 Vault 文件夹，然后把这段话原样粘进对话框：</p>
+<pre class="lang-text"><code>我要搭一个能长期生长的要成为我的“第二大脑”的本地知识库，目前库还是空的，所以先从采访开始。
+请你用「连环提问」的方式了解我：一次只问一个问题，像聊天一样顺着我上一个回答继续往深处挖。
+想了解的方向包括：我的专业和日常在忙什么、掌握了哪些技能、正在推进什么项目和长期目标、平时用什么工具和软件、有没有内容创作或表达上的习惯偏好。
+整个采访过程先不要写入任何文件，专心了解我。什么时候结束由我说了算。
+现在开始，先问第一个问题吧。</code></pre>
+<p>一般聊十几二十个问题，它对你的了解就足够立体了。回答不用打草稿，想到哪说到哪，AI会帮你整理。</p>
+<h3 id="第四步-让它出目录方案-你审过再动手">第四步｜让它出目录方案，你审过再动手</h3>
+<p>采访结束后把设计任务交给它，并明确要求「先出方案、不许动手」。目录框架一旦定下来，后面所有自动化流程都基于它运转，花五分钟确认，能省掉之后几个月的返工：</p>
+<pre class="lang-text"><code>采访到此结束。现在请基于刚才对我的了解，按照 Raw / Wiki / Outputs 三层架构，为这个知识库设计一套完整的目录结构。要求：
+1. 顶层固定为 Raw/、Wiki/、Outputs/ 三个文件夹；
+2. 每个顶层文件夹下的子文件夹，要按我的实际领域和工作流来设计，不要套通用模板；
+3. 每个文件夹配一句话用途说明；
+4. 列出需要初始化创建的核心文件（我的个人档案、工作方式说明、偏好规则等）；
+5. 给出根目录 AGENTS.md 的初始内容，让任何 AI 进库第一眼就能看懂全貌；
+6. 先把完整方案展示给我看，我确认之前不要创建任何文件。</code></pre>
+<p>拿到方案后，哪里不对直接提——「这两个板块合并」「按主题分而不是按时间分」——改到满意为止，再回一句「确认，开始创建」。几十秒内，所有文件夹和入口文件就会出现在 Obsidian 左侧的文件树里，空的 Vault 立刻变成一个有骨架的活系统。</p>
+<h3 id="第五步-验收通道">第五步｜验收通道</h3>
+<p>最后回到对话框扔两句话，测试 AI 和库之间的连接是否畅通：</p>
+<pre class="lang-text"><code>帮我列出这个库里所有文件夹和文件的完整结构
+读一遍 AGENTS.md，检查里面的信息是否准确</code></pre>
+<p>两条都能正常返回，说明通道已打通。到这里，你的第二大脑就绪，随时可以开始投喂内容。</p>
+<h2 id="2-5-可直接复制的-口令-模板">2.5 可直接复制的「口令」模板</h2>
+<p>库搭好之后，日常运转其实就靠几句话反复用。可以套用下面这组口令，直接复制、把「」里的内容换成你自己的就能跑。</p>
+<pre class="lang-text"><code>我的 Inbox 收件箱里新进了几份文档。请根据每份的内容类型，把它们分类移动到 Raw 下面对应的子文件夹里，并告诉我各自分到了哪里。</code></pre>
+<pre class="lang-text"><code>请对 Raw/ 里所有还没处理过的素材执行一次摄入，流程：
+1. 判断标准：文件名没有出现在 Wiki/log.md 里的就算未处理；
+2. 对每份新素材：通读全文提取核心观点；在 Wiki/sources/ 建一份摘要页；识别涉及的实体和概念，更新或新建对应页面；用双向链接把相关页面连起来；最后把新页面登记进 Wiki/index.md；
+3. 在 Wiki/log.md 追加一条记录：时间、处理了哪些文件、新建或更新了哪些页面；
+4. 全部做完即可，不用额外通知我。</code></pre>
+<pre class="lang-text"><code>我想搞清楚「某个问题」。请先在 Wiki 里检索相关页面并通读，基于已有页面回答我，每条结论都标注来自哪个页面。库里信息不够就直说缺什么，不要硬编。</code></pre>
+<pre class="lang-text"><code>请对我的知识库做一次健康检查：
+1. 找出没有任何入链的孤儿页面；
+2. 找出指向不存在页面的死链；
+3. 找出同一概念在不同页面里说法打架的地方；
+4. 结果写进 Wiki/maintenance-report.md，并在 log.md 追加一条记录。</code></pre>
+<pre class="lang-text"><code>针对我这个知识库，设一个每天上午 9 点的定时任务，自动执行一遍上面那条摄入流程。当天没有新素材就安静退出，不要打扰我。</code></pre>
+<div class="callout"><span class="emoji">💡</span><div class="callout-body">**小贴士：可以设置口令让AI定期拾取网页新闻，进行素材收集整理等，自动丰富你的知识库。**</div></div>
+<hr/>
+<h1 id="part-3-进阶二-打造你自己的-skill">Part 3 · 进阶二：打造你自己的 Skill</h1>
+<h2 id="3-1-skill-是什么">3.1 Skill 是什么</h2>
+<p>一句话定义：**Skill 就是把你经常和AI讲的话，打包成一个可以"一键调用"的小工具**。</p>
+<p>举个例子：</p>
+<ul>
+<li>你每周都要写一篇小红书图文，每次都要跟 AI 重复说"用真诚克制口吻、开头一句话戳人、不用破折号、不要编造数据…"——这些"老让我说的话"就是 Skill 的素材</li>
+<li>把这些话整理成一份说明书，下次只要说一句"启动小红书 Skill"，AI 就自动按你的规矩干活</li>
+</ul>
+<h2 id="3-2-一个-skill-长什么样">3.2 一个 Skill 长什么样</h2>
+<p>剥掉神秘感，Skill 本质就是一份「说明书文件」，核心是一个 <code>SKILL.md</code>：开头几行是元信息，告诉 AI 这是什么、什么时候该用；正文把工作流程和规矩写清楚。AI 每次接到任务，会先扫一遍所有 Skill 的说明，再判断要不要自动启用。</p>
+<pre class="lang-yaml"><code>---
+name: 短视频图文写作
+description: 用来写短视频脚本和小红书图文的选题与文案。当我说「写篇笔记」「出个选题」「写条种草文案」时使用。风格：开头一句话抓人，全程口语化，绝不编造数据。
+---
+# 正文从这里开始
+## 适用场景：什么任务下用它
+## 产出物：交出来的东西长什么样（字数、结构、格式）
+## 必须遵守的规矩：逐条列出硬性要求
+## 范例：附一篇我最满意的成品
+## 边界：拿不准的信息先问我；禁止编案例和数据</code></pre>
+<p>拆开看，一份合格的 Skill 由六个部分组成：</p>
+<ul>
+<li>**name / description**：名字和触发条件。description 里的词越贴近你的口头禅，自动触发的概率越高</li>
+<li>**适用场景**：什么任务下用，帮 AI 判断该不该启用</li>
+<li>**产出物**：最终交付物的具体样子，写得越具体越好</li>
+<li>**规矩**：你的硬性偏好，比如「开头一句话戳人」「不用破折号」</li>
+<li>**范例**：一篇你最满意的成品。范例的说服力永远大于规则</li>
+<li>**边界**：红线，比如不许编数据、拿不准先问</li>
+</ul>
+<div class="callout"><span class="emoji">💡</span><div class="callout-body">**常见问题：**Skill「装了但不触发」，九成是 因为description 写得太笼统。</div></div>
+<h2 id="3-3-从需求到落地-十句口令走完全程">3.3 从需求到落地：十句口令走完全程</h2>
+<p>造 Skill 不用从零憋文档。最高效的路径分三个阶段：先找现成的、再魔改成自己的、最后把你在对话里反复强调的偏好固化成文件。下面十句口令对应完整流程，全部可以直接复制，把「」里的内容换成你自己的领域就行。</p>
+<h3 id="阶段一-先站在别人的肩膀上">阶段一｜先站在别人的肩膀上</h3>
+<pre class="lang-text"><code>帮我在 GitHub 和全网找几个专门用来写「某类内容，比如小红书图文」的 Skill。要求优先 Star 多、最近半年还在更新的。每一个都告诉我：叫什么名字、来源链接、大概多少 Star 和最近更新时间、擅长干什么、适合什么人用、有没有额外使用条件（比如要联网、要会员）。</code></pre>
+<pre class="lang-text"><code>这几个里面你最推荐哪一个？从四个角度帮我比：Star 高不高、最近还在不在更新、说明书（README）写得清不清楚、跟「我的具体需求」贴不贴。给出你的第一推荐和理由，别客套，就当帮我挑一件天天要用的工具。</code></pre>
+<pre class="lang-text"><code>用我刚装好的这个 Skill，把「某个选题」写成一篇内容，我想先看看它的真实水平。</code></pre>
+<pre class="lang-text"><code>把我刚装的这个 Skill 从头到尾完整读一遍，然后用大白话讲给我听：1) 它把写一篇内容拆成了哪几步；2) 它定了哪些必须遵守的规矩；3) 它默认我是个什么样的人、在写什么类型的内容。先别改，我要先弄明白它现在的样子。</code></pre>
+<h3 id="阶段二-魔改成自己的版本">阶段二｜魔改成自己的版本</h3>
+<pre class="lang-text"><code>这个 Skill 底子不错，我要把它改成我自己的版本。我的情况：写的是「你的领域」，口吻要真诚克制，别那么营销腔。几条雷打不动的规矩请加进去：开头必须一句话戳中人；全程说人话、一段一段讲；不用破折号；绝不编造数据和案例。原来那些不适合我的设定（比如卖货话术）删掉。请在原来的基础上改，别推倒重来。改完告诉我你具体动了哪几处、为什么。</code></pre>
+<pre class="lang-text"><code>用改之前的版本和改之后的版本，各写一遍「同一个选题」，放在一起给我对比，让我看看差别在哪。</code></pre>
+<h3 id="阶段三-把偏好固化成-skill">阶段三｜把偏好固化成 Skill</h3>
+<pre class="lang-text"><code>回顾一下我们最近几次一起写内容的对话：我每一次都在反复强调、反复纠正哪些东西？把这些我总在念叨的点，一条条列出来。</code></pre>
+<pre class="lang-text"><code>把你刚才总结的这些点，整理成一个能反复使用的写作 Skill，按这个结构写：什么场景下用它；用它要产出什么；必须遵守的规矩（我反复念叨的全收进去）；附上我们最近写得最满意的那篇当范例；边界（比如不许编数据，拿不准先问我）。写好，存成文件。</code></pre>
+<pre class="lang-text"><code>用「Skill 名字」这个 Skill，帮我写「一个新选题」。</code></pre>
+<pre class="lang-text"><code>我说「帮我写篇笔记」的时候，这个 Skill 好像没被自动用上。你看看是不是它的说明（description）写得不够清楚？帮我把说明改得更容易被认出来，把我平时常说的词——笔记、图文、种草文案——都放进去。</code></pre>
+<p>这套流程走完，你收获的不只是一个 Skill，而是一套「从找工具到造工具」的方法：以后遇到任何重复性工作，都可以照这个模板，把它沉淀成只属于你的自动化能力。</p>
+<h2 id="3-4-安全红线">3.4 安全红线</h2>
+<div class="callout"><span class="emoji">🚨</span><div class="callout-body">**关于 Skill 来源**：网上能找到别人做的 Skill 装来用，但**只装你看过 README 的**。Skill 可以执行代码、读写文件，权限不小。装不明来源的 Skill 相当于把你电脑钥匙交给陌生人。</div></div>
+<ul>
+<li>只用可信来源（官方市场、有名有姓的作者、有 Star 维护记录的开源项目）</li>
+<li>装之前读一遍它的 <code>SKILL.md</code>，搞清楚它要调用哪些能力</li>
+<li>自己写的 Skill 也要想清楚边界再发布</li>
+</ul>
+<hr/>
+<h1 id="part-4-写在最后">Part 4 · 写在最后</h1>
+<h2 id="4-1-使用小贴士">4.1 使用小贴士</h2>
+<ul>
+<li>**别追求一次性把所有功能都用上**。挑一个最痛的场景先打透（比如先搞定"个人知识库能引用"），后两个都是拓展使用，就算不会，装好应用也能使用。</li>
+<li>**把每个项目都放独立工作空间**。回头找文件的时候你会感谢自己</li>
+<li>**失败了就回滚**。WorkBuddy 的计划模式天然支持"我没批准就别动"</li>
+</ul>
+<h2 id="4-2-官方资源">4.2 官方资源</h2>
+<ul>
+<li>WorkBuddy 官方文档：直接搜"WorkBuddy 使用指南"</li>
+<li>Obsidian 官方：obsidian.md，有中文文档</li>
+<li>RAG/LLM Wiki 入门：搜"向量数据库"、"RAG 原理"等能找到大量科普</li>
+</ul>
+<hr/>
+<div class="callout"><span class="emoji">📌</span><div class="callout-body">**声明**：本文为**个人学习与使用经验**整理，不代表任何机构或平台的官方立场，同时也希望大家**不要外传**。如果你按本文操作遇到问题，可以优先参考对应工具的最新官方文档，也欢迎大家找我**一起交流探讨**～</div></div>
+    </article>
+
+    <div class="pager">
+      <a class="prev" href="#前言">
+        <div class="eyebrow">↑ 回到顶部</div>
+        <strong>前言</strong>
+      </a>
+      <a class="next" href="#part-1-认识-workbuddy-入门篇">
+        <div class="eyebrow">Next →</div>
+        <strong>Part 1 · 认识 WorkBuddy</strong>
+      </a>
+    </div>
+  </main>
+</div>
+
+<button id="topBtn" aria-label="回到顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// Active TOC highlighting via IntersectionObserver
+const tocLinks = document.querySelectorAll('#toc a');
+const sections = [];
+tocLinks.forEach(a => {
+  const id = a.dataset.target;
+  const el = document.getElementById(id);
+  if (el) sections.push({ id, el, a });
+});
+
+let activeId = null;
+function setActive(id) {
+  if (id === activeId) return;
+  tocLinks.forEach(a => a.classList.remove('is-active'));
+  const target = sections.find(s => s.id === id);
+  if (target) {
+    target.a.classList.add('is-active');
+    activeId = id;
+  }
+}
+
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    // Pick the topmost in-view heading
+    let top = null;
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      if (!top || e.boundingClientRect.top < top.boundingClientRect.top) top = e;
+    }
+    if (top) setActive(top.target.id);
+  }, {
+    rootMargin: '-80px 0px -70% 0px',
+    threshold: 0
+  });
+  sections.forEach(s => io.observe(s.el));
+}
+
+// Smooth scroll: also set active immediately on click
+tocLinks.forEach(a => a.addEventListener('click', () => setActive(a.dataset.target)));
+
+// Back-to-top button
+const btn = document.getElementById('topBtn');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 400) btn.classList.add('show'); else btn.classList.remove('show');
+});
+</script>
+</body>
+</html>
